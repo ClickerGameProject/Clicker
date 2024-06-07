@@ -1,0 +1,24 @@
+import React from 'react';
+import { StyleSheet, Text,  View } from 'react-native';
+
+export default function App() {
+
+  return (
+    <View style={styles.container}>
+      <Text>
+        Hello World!
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop : 50,
+    marginLeft: 10,
+    },
+    field: {
+      marginBottom: 10,
+      fontSize: 24,
+    }
+});
