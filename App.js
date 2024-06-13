@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './Screens/HomesScreen';
+import StackNavigator from './Components/StackNavigator';
 
 export default function App() {
 
@@ -10,7 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <SafeAreaView style={styles.container}>
-        {HomeScreen()}
+        <StackNavigator />
       </SafeAreaView>
     </NavigationContainer>
   );

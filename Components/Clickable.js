@@ -2,21 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Block from '../Assets/Images/Block.png';
 
-export default function Clickable() {
+export default function Clickable({ amount, clickValue, updateAmount}) {
     // State to keep track of the button click
     // Also keep track of the number of times the button was clicked
     // And use image for the button
-    const [clicked, setClicked] = useState(false);
-    const [amount, setAmount] = useState(0);
 
     const handleClick = () => {
-        if (clicked) {
-            setAmount(prevAmount => prevAmount + 1);
-            console.log(amount + 1);
-        } else {
-            setClicked(true);
-        }
-    }
+        const newAmount = amount + clickValue;
+        updateAmount(newAmount);
+    };
 
     return (
         <View style={styles.container}>
