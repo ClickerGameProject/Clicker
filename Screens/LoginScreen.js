@@ -7,8 +7,8 @@ import { loginUser } from '../Components/LoginHandler';
 import { createTable, insertInitialData, getGameData, updateAmount } from '../Database/Database';
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = React.useState('Username');
-  const [password, setPassword] = React.useState('****')
+  const [username, setUsername] = React.useState('User');
+  const [password, setPassword] = React.useState('1234')
 
   useEffect(() => {
     const setupDatabase = async () => {

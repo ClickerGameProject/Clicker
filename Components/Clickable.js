@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Block from '../Assets/Images/Block.png';
+import styles from './Style';
 
 export default function Clickable({ amount, clickValue, updateAmount}) {
     // State to keep track of the button click
@@ -13,29 +14,13 @@ export default function Clickable({ amount, clickValue, updateAmount}) {
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={handleClick} style={styles.button}>
+        <View style={styles.ClickContainer}>
+            <TouchableOpacity onPress={handleClick} style={styles.BlockButton}>
                 <Image
-                    source={Block} // Replace with your image URL
-                    style={styles.image}
+                    source={Block}
+                    style={styles.BlockSize}
                 />
             </TouchableOpacity>
-            <Text>Clicked {amount} times</Text>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    button: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    image: {
-        width: 100,
-        height: 100,
-    },
-});

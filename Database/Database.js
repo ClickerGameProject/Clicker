@@ -56,7 +56,7 @@ export const getGameData = async () => {
     return result ? result : { amount: 0, clickValue: 1 };
 };
 
-// Optional: Reset game data
+// Reset game data
 export const resetGameData = async () => {
     const db = await openDatabaseAsync();
     await db.runAsync('UPDATE game_data SET amount = 0, clickValue = 1 WHERE id = 1');
