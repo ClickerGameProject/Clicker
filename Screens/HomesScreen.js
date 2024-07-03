@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Clickable from '../Components/Clickable';
 import { createTable, insertInitialData, getGameData, updateAmount } from '../Database/Database';
+import { BackHandler } from 'react-native';
+
+class MyComponent extends React.Component {
+    // Component rendered succesfully, e.g "Mounted"
+    componentDidMount() {
+      BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    }
+  
+    // Called when component is removed, or "Dismounted"
+    componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    }
+  
+    handleBackPress = () => {
+        navigation.navigate('Login');
+        return true; // Return true to prevent default back behavior.
+      };
+}
 
 export default function HomeScreen({ navigation }) {
     const [amount, setAmount] = useState(0);
     const [clickValue, setClickValue] = useState(1);
-
-    useEffect(() => {
-        const setupDatabase = async () => {
-            await createTable();
-            await insertInitialData();
-            const gameData = await getGameData();
-            setAmount(gameData.amount);
-            setClickValue(gameData.clickValue);
-        };
-        setupDatabase();
-    }, []);
 
     const updateGameAmount = async (newAmount) => {
         setAmount(newAmount);
@@ -42,3 +49,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+

@@ -6,8 +6,8 @@ import StackNavigator from './Components/StackNavigator';
 export default function App() {
 
 // The NavigationContainer has to be in the root of the app.
-
   return (
+
     <NavigationContainer>
       <SafeAreaView style={styles.container}>
         <StackNavigator />
