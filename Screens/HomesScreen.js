@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }) {
         return (
             <View style={styles.Topbar}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.TopbarTitle}>Mined blocks</Text>
+                    <Text style={styles.TopbarTitle}>MINED BLOCKS</Text>
                     <Text style={styles.TopbarAmount}>{amount}</Text>
                 </View>
                 <TouchableOpacity 

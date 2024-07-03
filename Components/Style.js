@@ -1,5 +1,7 @@
 // Global styling for the app
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 
@@ -15,6 +17,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+
 
     //TopBar styling and it's children
     Topbar: {
@@ -63,6 +66,31 @@ const styles = StyleSheet.create({
     BlockSize: {
         width: 200,
         height: 200,
+    },
+    //Flatlst styling and it's children
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black overlay
+        width: windowWidth,
+        height: windowHeight / 2, // Half the height of the screen
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    gridContainer: {
+        justifyContent: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 10,
+    },
+    gridItem: {
+        backgroundColor: '#E0E0E0', // Gray background color for each grid item
+        padding: 20,
+        margin: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '45%', // Adjust width as needed for spacing
+        aspectRatio: 1, // Ensure square shape, adjust as needed
     },
 });
 export default styles;
