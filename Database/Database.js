@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 
 const openDatabaseAsync = async () => {
     try {
-        const db = await SQLite.openDatabaseAsync('Prices.db');
+        const db = await SQLite.openDatabaseAsync('Database.db');
         return db;
     } catch (error) {
         console.error("Error opening database: ", error);
@@ -19,6 +19,11 @@ export const createTable = async () => {
             id INTEGER PRIMARY KEY NOT NULL, 
             amount INTEGER DEFAULT 0, 
             clickValue INTEGER DEFAULT 1
+    );
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY NOT NULL,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL
         );
     `);
 };

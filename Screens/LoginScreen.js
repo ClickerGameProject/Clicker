@@ -1,34 +1,43 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Button from '../Components/Button';
 import { TextInput } from 'react-native';
+import { registerUser } from '../Components/Register';
+import { loginUser } from '../Components/LoginHandler';
+import { createTable, insertInitialData, getGameData, updateAmount } from '../Database/Database';
 
 export default function Login({ navigation }) {
   const [username, setUsername] = React.useState('User');
   const [password, setPassword] = React.useState('1234')
 
-  // Placeholder account information for logging in
-  const correctUsername = 'User';
-  const correctPassword = '1234';
+  useEffect(() => {
+    const setupDatabase = async () => {
+        await createTable();
+        await insertInitialData();
+        const gameData = await getGameData();
+        setAmount(gameData.amount);
+        setClickValue(gameData.clickValue);
+    };
+    setupDatabase();
+}, []);
 
-  const handleLoginPress = () => {
-    if (username === correctUsername && password === correctPassword )
-      {
-        alert('Login succesful!');
-        navigation.navigate('Home');
-      }
-      else if (username == '' || password == '')
-        {
-          alert('Please enter your username and password.')
-        }
-      else{
-        alert(`Wrong username or password.`);
-      }
+const handleLoginPress = async () => {
+  const loginSuccessful = await loginUser(username, password);
 
-  };
+  if (loginSuccessful) {
+    alert('Jippii!');
+    navigation.navigate('Home');
+  }
+  else if (!loginSuccessful)
+    {
+    alert('Incorrect username or password.');
+  }
+};
 
-  const handleRegisterPress = () => {
-    alert("You can't actually register yet, sorry.")
+
+ const handleRegisterPress = () => {
+    registerUser(username, password)
+      console.log('Registering user..');
   };
 
   return (
