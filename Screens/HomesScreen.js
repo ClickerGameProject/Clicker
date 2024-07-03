@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { Text, View, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import Clickable from '../Components/Clickable';
 import { createTable, insertInitialData, getGameData, updateAmount } from '../Database/Database';
+import styles from '../Components/Style';
 
 export default function HomeScreen({ navigation }) {
     const [amount, setAmount] = useState(0);
@@ -23,22 +24,37 @@ export default function HomeScreen({ navigation }) {
         await updateAmount(newAmount);
     };
 
+    // TopBar component that has the title, amount, and shop button.
+    function TopBar() {
+        return (
+            <View style={styles.Topbar}>
+                <View style={styles.textContainer}>
+                    <Text style={styles.TopbarTitle}>Mined blocks</Text>
+                    <Text style={styles.TopbarAmount}>{amount}</Text>
+                </View>
+                <TouchableOpacity 
+                    style={styles.imageContainer} 
+                    onPress={() => navigation.navigate('Shop', { amount, clickValue, setAmount, setClickValue })}
+                >
+                    <Image 
+                        style={styles.buttonImage} 
+                        source={require('../Assets/Images/Villager.png')}
+                    />
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
     return (
-        <View style={styles.container}>
-            <Text>Home Screen</Text>
-            <Button
-                title="Go to Shop"
-                onPress={() => navigation.navigate('Shop', { amount, clickValue, setAmount, setClickValue })}
-            />
-            <Clickable amount={amount} clickValue={clickValue} updateAmount={updateGameAmount} />
-        </View>
+        <ImageBackground
+            source={require('../Assets/Images/Overworld.jpg')}
+            style={styles.background}
+        >
+                  {TopBar()}
+            <View style={styles.container}>
+                <Clickable amount={amount} clickValue={clickValue} updateAmount={updateGameAmount} />
+            </View>
+        </ImageBackground>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-});

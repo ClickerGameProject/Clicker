@@ -4,8 +4,8 @@ import Button from '../Components/Button';
 import { TextInput } from 'react-native';
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = React.useState('Username');
-  const [password, setPassword] = React.useState('****')
+  const [username, setUsername] = React.useState('User');
+  const [password, setPassword] = React.useState('1234')
 
   // Placeholder account information for logging in
   const correctUsername = 'User';
