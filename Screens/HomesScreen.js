@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
                 </View>
                 <TouchableOpacity 
                     style={styles.imageContainer} 
-                    onPress={() => navigation.navigate('Shop', { amount, clickValue, setAmount, setClickValue })}
+                    onPress={() => navigation.navigate('Shop', { amount })}
                 >
                     <Image 
                         style={styles.buttonImage} 
