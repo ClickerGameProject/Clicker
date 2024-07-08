@@ -2,22 +2,20 @@
 
 import React from 'react';
 import { View, Text, FlatList, ImageBackground, TouchableOpacity, Image } from 'react-native';
-import ShopContent, { upgradePickaxe } from '../Components/ShopContent';
 import styles from '../Components/Style';
+import { updateClickValue, updateAmount } from '../Database/Database';
+import ShopContent from '../Components/ShopContent';
 
 export default function ShopScreen({ route, navigation }) {
-
-    const { amount } = route.params; // Receive amount from navigation params
+    const { amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds } = route.params;
 
     function TopBar() {
-
-        const emeralds = amount / 10;
 
         return (
             <View style={styles.Topbar}>
                 <View style={styles.textContainer}>
                     <Text style={styles.TopbarTitle}>Welcome to the shop!</Text>
-                    <Text style={styles.TopbarAmount}>{emeralds} avaivable emeralds.</Text>
+                    <Text style={styles.TopbarAmount}>You have {emeralds} emeralds.</Text>
                 </View>
                 <TouchableOpacity
                     style={styles.imageContainer}
@@ -47,43 +45,45 @@ export default function ShopScreen({ route, navigation }) {
         { id: '12', name: 'Item 12' },
     ];
 
-    const renderItem = ({ item }) => (
-        <View style={styles.gridItem}>
-            <Text style={styles.gridItemText}>{item.name}</Text>
-            {/* Add more components like images, buttons, etc. here */}
-        </View>
-    );
+    function handleUpgrade() {
+        upgradePickaxe(amount, emeralds, clickValue, setAmount, setClickValue, doubleClickCost, setDoubleClickCost);
+    }
 
-    return (
-        <ImageBackground
-            source={require('../Assets/Images/Shop.jpg')}
-            style={styles.background}
-        >
-                            {TopBar()}
-
-            <View style={styles.overlay}>
-                <View style={styles.gridContainer}>
-                    <FlatList
-                        data={data}
-                        renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                        numColumns={4}
-                        contentContainerStyle={styles.gridContentContainer}
-                    />
-                </View>
+    const renderItem = ({ item }) => {
+        return item.id === '1' ? (
+            <ShopContent
+                amount={amount}
+                emeralds={emeralds}
+                clickValue={clickValue}
+                setAmount={setAmount}
+                setClickValue={setClickValue}
+                setEmeralds={setEmeralds}
+            />
+        ) : (
+            <View style={styles.gridItem}>
+                <Text style={styles.gridItemText}>{item.name}</Text>
             </View>
-        </ImageBackground>
-    );
-}
+        );
+    };
 
+        return (
+            <ImageBackground
+                source={require('../Assets/Images/Shop.jpg')}
+                style={styles.background}
+            >
+                {TopBar()}
 
-//Tällä sai shopcontentista itemin 
-/*<View style={styles.container}>
-<ShopContent
-    amount={amount}
-    clickValue={clickValue}
-    setAmount={setAmount}
-    setClickValue={setClickValue}
-    navigation={navigation}
-/>
-</View>*/
+                <View style={styles.overlay}>
+                    <View style={styles.gridContainer}>
+                        <FlatList
+                            data={data}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.id}
+                            numColumns={4}
+                            contentContainerStyle={styles.gridContentContainer}
+                        />
+                    </View>
+                </View>
+            </ImageBackground>
+        );
+    }

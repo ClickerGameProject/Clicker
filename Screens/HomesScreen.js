@@ -26,6 +26,12 @@ export default function HomeScreen({ navigation }) {
     const [amount, setAmount] = useState(0);
     const [clickValue, setClickValue] = useState(1);
 
+    const [emeralds, setEmeralds] = useState(0);
+
+    useEffect(() => {
+        setEmeralds(Math.floor(amount / 10));
+    }, [amount]);
+
     const updateGameAmount = async (newAmount) => {
         setAmount(newAmount);
         await updateAmount(newAmount);
@@ -41,7 +47,7 @@ export default function HomeScreen({ navigation }) {
                 </View>
                 <TouchableOpacity 
                     style={styles.imageContainer} 
-                    onPress={() => navigation.navigate('Shop', { amount })}
+                    onPress={() => navigation.navigate('Shop', { amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds })}
                 >
                     <Image 
                         style={styles.buttonImage} 

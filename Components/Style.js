@@ -1,6 +1,7 @@
 // Global styling for the app
 import { StyleSheet, Dimensions } from 'react-native';
 
+// Used for responsive UI design
 const windowWidth = Dimensions.get('window').width;
 
 const ITEM_SIZE = windowWidth / 5.5; // Size of each item
@@ -87,10 +88,10 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         width: '90%',
-        height: ROWS * (ITEM_SIZE + 2 * GRID_MARGIN), 
-        justifyContent: 'center', 
+        height: ROWS * (ITEM_SIZE + 2 * GRID_MARGIN),
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 20, 
+        paddingTop: 20,
         borderWidth: 2,
         borderColor: '#000',
         borderRadius: 15,
@@ -107,10 +108,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: ITEM_SIZE - GRID_MARGIN * 2,
-        height: ITEM_SIZE - GRID_MARGIN * 2, 
-        borderWidth: 2, 
+        height: ITEM_SIZE - GRID_MARGIN * 2,
+        borderWidth: 2,
         borderColor: '#000',
-        shadowColor: '#000', 
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.2,
         shadowRadius: 1,
@@ -124,40 +125,45 @@ const styles = StyleSheet.create({
     amountText: {
         fontSize: 20,
         marginBottom: 20,
-      },
-      button: {
+    },
+    button: {
         backgroundColor: '#3498db',
         padding: 10,
         borderRadius: 5,
         marginVertical: 10,
-      },
-      buttonText: {
+    },
+    buttonText: {
         fontSize: 18,
         color: 'white',
         textAlign: 'center',
-      },
-      pickaxeContainer: {
+    },
+    pickaxeContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-      },
-      pickaxeText: {
+    },
+    pickaxeText: {
         fontSize: 18,
         marginRight: 10,
-      },
-      shopItemsContainer: {
+    },
+    shopItemsContainer: {
         marginTop: 20,
-      },
-      itemContainer: {
+    },
+    itemContainer: {
         backgroundColor: '#ecf0f1',
         padding: 10,
         marginVertical: 5,
         borderRadius: 5,
         width: 100,
         alignItems: 'center',
-      },
-      itemText: {
+    },
+    itemText: {
         fontSize: 16,
         textAlign: 'center',
-      },
+    },
+    ShopImage: {
+        width: '100%', // Adjust this to fit within the container
+        height: '100%',
+        // Aspect ratio is maintained by the resizeMode="contain" property
+    },
 });
 export default styles;
