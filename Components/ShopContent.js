@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { updateAmount, updateClickValue } from '../Database/Database';
 import styles from './Style';
 
+export default function ShopContent({ amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds }) {
     const [doubleClickCost, setDoubleClickCost] = React.useState(clickValue * 10);
 
     const upgradePickaxe = async () => {
