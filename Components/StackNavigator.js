@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../Screens/HomesScreen';
 import ShopScreen from '../Screens/ShopScreen';
 import LoginScreen from "../Screens/LoginScreen";
+import RegisterScreen from "../Screens/RegisterScreen";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ export default function StackNavigator() {
             <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Shop" component={ShopScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 

@@ -2,6 +2,13 @@ import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './Components/StackNavigator';
+import { Random } from 'expo-random';
+import bcrypt from 'react-native-bcrypt'
+
+bcrypt.setRandomFallback(async (byteCount) => {
+    const randomBytes = await Random.getRandomBytesAsync(byteCount);
+    return randomBytes;
+});
 
 export default function App() {
 
