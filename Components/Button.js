@@ -2,12 +2,17 @@ import { StyleSheet, View, Pressable, Text } from 'react-native';
 
 // Straightforward Button component; use label to show text on the button,
 // and onPress to declare the action taken upon pressing it
-export default function Button({ label, onPress }) {
+export default function Button({ label, onPress, disabled }) {
   return (
     <View style={[styles.buttonContainer]}>
       <Pressable
-        style={[styles.button]}
+                style={({ pressed }) => [
+                  styles.button,
+                  pressed && styles.disabled,
+                  disabled && styles.disabled, 
+                ]}
         onPress={onPress}
+        disabled={disabled}
       >
         <Text style={[styles.buttonLabel]}>
           {label}
@@ -41,4 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#25292e'
   },
+  disabled: {
+    opacity: 0.5,
+  }
 });

@@ -1,43 +1,58 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Button from '../Components/Button';
-import { TextInput } from 'react-native';
-import { registerUser } from '../Components/Register';
 import { loginUser } from '../Components/LoginHandler';
-import { createTable, insertInitialData, getGameData, updateAmount } from '../Database/Database';
+import { createTable, insertInitialData, getGameData } from '../Database/Database';
 
 export default function Login({ navigation }) {
   const [username, setUsername] = React.useState('User');
   const [password, setPassword] = React.useState('1234')
 
+  //Setup database and such upon first render.
   useEffect(() => {
     const setupDatabase = async () => {
         await createTable();
         await insertInitialData();
         const gameData = await getGameData();
-        setAmount(gameData.amount);
-        setClickValue(gameData.clickValue);
     };
     setupDatabase();
 }, []);
 
-const handleLoginPress = async () => {
-  const loginSuccessful = await loginUser(username, password);
+  //States to enable or disable buttons as needed
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
-  if (loginSuccessful) {
-    alert('Jippii!');
+  const disableButtons =  () => {
+    setIsButtonDisabled(true);
+  }
+
+  const enableButtons = () => {
+    setIsButtonDisabled(false);
+  }
+
+  const handleLoginPress = async () => {
+    disableButtons();
+    setIsEditable(false);
+    const loginSuccessful = await loginUser(username, password);
+
+    if (loginSuccessful) {
+      alert('Login successful!');
+      await navigation.navigate('Home');
+      enableButtons();
+      setIsEditable(true);
+    } else {
+      alert('Incorrect username or password.');
+      enableButtons();
+      setIsEditable(true);
+    }
+  };
+
+  const handleRegisterPress = async () => {
+    navigation.navigate('Register');
+  };
+
+  const handleNothanks = async () => {
     navigation.navigate('Home');
-  }
-  else if (!loginSuccessful)
-    {
-    alert('Incorrect username or password.');
-  }
-};
-
-
- const handleRegisterPress = () => {
-    registerUser(username, password)
-      console.log('Registering user..');
   };
 
   return (
@@ -46,18 +61,21 @@ const handleLoginPress = async () => {
         Please start by logging in, or registering an account.
       </Text>
       <TextInput
+          style={styles.input}
+          onChangeText={setUsername}
+          value={username}
+          editable={isEditable}
+        />
+        <TextInput
         style={styles.input}
-        onChangeText={setUsername}
-        value={username}
+        onChangeText={setPassword}
+        value={password}
+        editable={isEditable}
+        secureTextEntry
       />
-      <TextInput
-      style={styles.input}
-      onChangeText={setPassword}
-      value={password}
-      secureTextEntry
-    />
-      <Button label="Login" onPress={handleLoginPress} />
-      <Button label="Register" onPress={handleRegisterPress} />
+      <Button label="Login" onPress={handleLoginPress} disabled={isButtonDisabled} />
+      <Button label="Register" onPress={handleRegisterPress} disabled={isButtonDisabled} />
+      <Button label="No thanks" onPress={handleNothanks} disabled={isButtonDisabled} />
     </View>
   );
 }

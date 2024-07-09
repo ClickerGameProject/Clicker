@@ -2,6 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import bcrypt from 'react-native-bcrypt'
 
 export const registerUser = async (username, password) => {
+    console.log('Register button pressed!')
     try {
         const db = await SQLite.openDatabaseAsync('Database.db');
 
@@ -15,11 +16,9 @@ export const registerUser = async (username, password) => {
             INSERT INTO users (username, password)
             VALUES (?, ?)
         `, [username, hashedPassword]);
+        return true;
 
-        // Show a success message or navigate to the next screen
-        alert('Registration successful!');
     } catch (error) {
-        console.error('Error during registration:', error);
-        alert('Registration failed. Please try again.');
+        return false;
     }
 };
