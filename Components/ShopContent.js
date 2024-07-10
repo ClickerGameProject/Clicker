@@ -1,53 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { updateAmount, updateClickValue, resetGameData } from '../Database/Database';
+import React from 'react';
+import { View, Image, TouchableOpacity } from 'react-native';
+import { updateAmount, updateClickValue } from '../Database/Database';
+import styles from './Style';
 
-const ShopContent = ({ amount, clickValue, setAmount, setClickValue, navigation }) => {
-    const [doubleClickCost, setDoubleClickCost] = useState(clickValue * 10); // Initial cost
+export default function ShopContent({ amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds }) {
+    const [doubleClickCost, setDoubleClickCost] = React.useState(clickValue * 10);
 
-    const handleBuyDouble = async () => {
-        if (amount >= doubleClickCost) {
-            const newAmount = amount - doubleClickCost;
+    const upgradePickaxe = async () => {
+        if (emeralds >= doubleClickCost) {
+            // Calculate new values
+            const newEmeralds = emeralds - doubleClickCost;
             const newClickValue = clickValue * 2;
+            const newAmount = amount - (doubleClickCost * 10); // Subtract corresponding blocks
+
+            // Update state and database
             await updateAmount(newAmount);
             await updateClickValue(newClickValue);
             setAmount(newAmount);
+            setEmeralds(newEmeralds);
             setClickValue(newClickValue);
-            setDoubleClickCost(newClickValue * 10); // Update cost after purchase
+            setDoubleClickCost(newClickValue * 10);
+            console.log('Upgrading pickaxe');
         } else {
-            alert('Not enough amount to buy this upgrade!');
-        }
-    };
-
-    const handleResetGame = async () => {
-        try {
-            await resetGameData(); // Call the reset function from database.js
-            setAmount(0); // Reset amount state
-            setClickValue(1); // Reset clickValue state
-            setDoubleClickCost(10); // Reset double-click cost (or initial cost)
-            alert('Game data has been reset!');
-        } catch (error) {
-            console.error('Error resetting game data:', error);
-            alert('Failed to reset game data.');
+            console.log('Not enough emeralds');
         }
     };
 
     return (
-        <View style={styles.container}>
-            <Text>Current Click Value: {clickValue}</Text>
-            <Text>Amount: {amount}</Text>
-            <Button title={`Buy Double Click (Cost: ${doubleClickCost})`} onPress={handleBuyDouble} />
-            <Button title="Reset Game" onPress={handleResetGame} />
-            <Button title="Back to Home" onPress={() => navigation.navigate('Home')} />
+        <View>
+            <TouchableOpacity onPress={upgradePickaxe} style={styles.gridItem}>
+                <Image
+                    resizeMode='contain'
+                    style={styles.ShopImage}
+                    source={require('../Assets/Images/Items/StonePick.png')}
+                />
+            </TouchableOpacity>
         </View>
     );
-};
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-});
-
-export default ShopContent;
+}
