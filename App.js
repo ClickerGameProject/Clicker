@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './Components/StackNavigator';
 import { Random } from 'expo-random';
+import { setupDatabase } from './Database/Database';
 import bcrypt from 'react-native-bcrypt'
 
 bcrypt.setRandomFallback(async (byteCount) => {

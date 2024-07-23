@@ -45,10 +45,6 @@ export default function ShopScreen({ route, navigation }) {
         { id: '12', name: 'Item 12' },
     ];
 
-    function handleUpgrade() {
-        upgradePickaxe(amount, emeralds, clickValue, setAmount, setClickValue, doubleClickCost, setDoubleClickCost);
-    }
-
     const renderItem = ({ item }) => {
         return item.id === '1' ? (
             <ShopContent
@@ -66,24 +62,24 @@ export default function ShopScreen({ route, navigation }) {
         );
     };
 
-        return (
-            <ImageBackground
-                source={require('../Assets/Images/Shop.jpg')}
-                style={styles.background}
-            >
-                {TopBar()}
+    return (
+        <ImageBackground
+            source={require('../Assets/Images/Shop.jpg')}
+            style={styles.background}
+        >
+            {TopBar()}
 
-                <View style={styles.overlay}>
-                    <View style={styles.gridContainer}>
-                        <FlatList
-                            data={data}
-                            renderItem={renderItem}
-                            keyExtractor={item => item.id}
-                            numColumns={4}
-                            contentContainerStyle={styles.gridContentContainer}
-                        />
-                    </View>
+            <View style={styles.overlay}>
+                <View style={styles.gridContainer}>
+                    <FlatList
+                        data={data}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        numColumns={4}
+                        contentContainerStyle={styles.gridContentContainer}
+                    />
                 </View>
-            </ImageBackground>
-        );
-    }
+            </View>
+        </ImageBackground>
+    );
+}
