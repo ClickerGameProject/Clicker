@@ -8,6 +8,14 @@ export default function ShopContent({ amount, emeralds, clickValue, setAmount, s
     const [pickaxeLevel, setPickaxeLevel] = useState(1); // Initialize the pickaxe level in state
     const maxPickaxeLevel = 5;
 
+    const pickaxeImages = [
+        require('../Assets/Images/Items/WoodenPick.png'),
+        require('../Assets/Images/Items/StonePick.png'),
+        require('../Assets/Images/Items/IronPick.png'),
+        require('../Assets/Images/Items/DiamondPick.png'),
+        require('../Assets/Images/Items/NetheritePick.png'),
+    ];
+
     useEffect(() => {
         // Fetch initial game data from the database
         const fetchGameData = async () => {
@@ -64,7 +72,7 @@ export default function ShopContent({ amount, emeralds, clickValue, setAmount, s
                 <Image
                     resizeMode='contain'
                     style={styles.ShopImage}
-                    source={require('../Assets/Images/Items/DiamondPick.png')}
+                    source={pickaxeImages[pickaxeLevel - 1]}
                 />
             </TouchableOpacity>
             <Button title="Reset Game" onPress={resetGame} />
