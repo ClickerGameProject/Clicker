@@ -1,13 +1,15 @@
 // ShopScreen.js
-
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, FlatList, ImageBackground, TouchableOpacity, Image } from 'react-native';
 import styles from '../Components/Style';
 import { updateClickValue, updateAmount } from '../Database/Database';
 import ShopContent from '../Components/ShopContent';
+import { GameDataContext } from '../Components/GameDataContext';
 
 export default function ShopScreen({ route, navigation }) {
-    const { amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds } = route.params;
+    const { gameData } = useContext(GameDataContext);
+    const { amount, clickValue } = gameData;
+    const [emeralds, setEmeralds] = React.useState(amount / 10);
 
     function TopBar() {
 
@@ -51,8 +53,6 @@ export default function ShopScreen({ route, navigation }) {
                 amount={amount}
                 emeralds={emeralds}
                 clickValue={clickValue}
-                setAmount={setAmount}
-                setClickValue={setClickValue}
                 setEmeralds={setEmeralds}
             />
         ) : (

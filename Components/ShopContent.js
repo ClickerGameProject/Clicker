@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity, Button } from 'react-native';
 import { updateAmount, updateClickValue, updatePickLevel, getGameData, resetGameData } from '../Database/Database';
 import styles from './Style';
+import { GameDataContext } from './GameDataContext';
 
-export default function ShopContent({ amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds }) {
-    const [doubleClickCost, setDoubleClickCost] = useState(clickValue * 10);
-    const [pickaxeLevel, setPickaxeLevel] = useState(1); // Initialize the pickaxe level in state
+export default function ShopContent({ setEmeralds }) {
+    const { gameData, setGameData } = useContext(GameDataContext);
+    const { amount, clickValue, pickaxeLevel } = gameData;
+    const [doubleClickCost, setDoubleClickCost] = useState(clickValue * 100);
+
+    useEffect(() => {
+        setDoubleClickCost(clickValue * 100);
+    }, [clickValue]);
+
     const maxPickaxeLevel = 5;
 
     const pickaxeImages = [
@@ -16,37 +23,29 @@ export default function ShopContent({ amount, emeralds, clickValue, setAmount, s
         require('../Assets/Images/Items/NetheritePick.png'),
     ];
 
-    useEffect(() => {
-        // Fetch initial game data from the database
-        const fetchGameData = async () => {
-            const gameData = await getGameData();
-            setPickaxeLevel(gameData.pickaxeLevel);
-            setAmount(gameData.amount);
-            setClickValue(gameData.clickValue);
-        };
-        fetchGameData();
-    }, []);
-
     const upgradePickaxe = async () => {
         if (pickaxeLevel < maxPickaxeLevel) {
-            if (emeralds >= doubleClickCost) {
+            if (amount >= doubleClickCost) { // Check if there are enough emeralds
                 const newPickaxeLevel = pickaxeLevel + 1;
-                console.log('Upgrading pickaxe to level ' + newPickaxeLevel);
-                const newEmeralds = emeralds - doubleClickCost;
                 const newClickValue = clickValue * 2;
-                const newAmount = amount - (doubleClickCost * 10);
+                const newAmount = amount - doubleClickCost; // Update amount by the cost in terms of blocks
 
-                // Update database
+                // Update the database with new values
                 await updateAmount(newAmount);
                 await updateClickValue(newClickValue);
                 await updatePickLevel(newPickaxeLevel);
 
-                // Update state
-                setAmount(newAmount);
-                setEmeralds(newEmeralds);
-                setClickValue(newClickValue);
-                setDoubleClickCost(newClickValue * 10);
-                setPickaxeLevel(newPickaxeLevel); // Increment the pickaxe level
+                // Update context state with new values
+                setGameData({
+                    ...gameData,
+                    amount: newAmount,
+                    clickValue: newClickValue,
+                    pickaxeLevel: newPickaxeLevel,
+                });
+
+                // Calculate new emeralds count after deduction
+                setEmeralds(newAmount / 10);
+                console.log('Pickaxe upgraded');
             } else {
                 console.log('Not enough emeralds');
             }
@@ -56,14 +55,16 @@ export default function ShopContent({ amount, emeralds, clickValue, setAmount, s
     };
 
     const resetGame = async () => {
-        await resetGameData();
-        // Fetch and set initial game data after reset
-        const gameData = await getGameData();
-        setPickaxeLevel(gameData.pickaxeLevel);
-        setAmount(gameData.amount);
-        setClickValue(gameData.clickValue);
-        setEmeralds(0);
-        setDoubleClickCost(gameData.clickValue * 10);
+        try {
+            await resetGameData();
+            const data = await getGameData();
+            setGameData(data);
+            setEmeralds(Math.floor(data.amount / 10));
+            console.log("Game has been reset:", data);
+
+        } catch (error) {
+            console.error("Error resetting game data:", error);
+        }
     };
 
     return (
