@@ -9,7 +9,7 @@ import { GameDataContext } from '../Components/GameDataContext';
 export default function ShopScreen({ route, navigation }) {
     const { gameData } = useContext(GameDataContext);
     const { amount, clickValue } = gameData;
-    const [emeralds, setEmeralds] = React.useState(amount / 10);
+    const [emeralds, setEmeralds] = React.useState(Math.floor(amount / 10));
 
     function TopBar() {
 

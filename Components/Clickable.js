@@ -6,7 +6,7 @@ import styles from './Style';
 export default function Clickable() {
     // Get game data and updater function from context
     const { gameData, setGameData } = useContext(GameDataContext);
-    const { amount, clickValue } = gameData;
+    const { amount, clickValue, pickaxeLevel } = gameData;
 
     // Handler for button click
     const handleClick = () => {
@@ -33,7 +33,7 @@ export default function Clickable() {
         <View style={styles.ClickContainer}>
             <TouchableOpacity onPress={handleClick} style={styles.BlockButton}>
                 <Image
-                    source={blockImages[0]} // Example image, adjust as needed
+                    source={blockImages[pickaxeLevel - 1]} // Example image, adjust as needed
                     style={styles.BlockSize}
                 />
             </TouchableOpacity>
