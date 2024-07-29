@@ -1,28 +1,69 @@
-import React from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
-import { updateAmount, updateClickValue } from '../Database/Database';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Image, TouchableOpacity, Button } from 'react-native';
+import { updateAmount, updateClickValue, updatePickLevel, getGameData, resetGameData } from '../Database/Database';
 import styles from './Style';
+import { GameDataContext } from './GameDataContext';
 
-export default function ShopContent({ amount, emeralds, clickValue, setAmount, setClickValue, setEmeralds }) {
-    const [doubleClickCost, setDoubleClickCost] = React.useState(clickValue * 10);
+export default function ShopContent({ setEmeralds }) {
+    const { gameData, setGameData } = useContext(GameDataContext);
+    const { amount, clickValue, pickaxeLevel } = gameData;
+    const [doubleClickCost, setDoubleClickCost] = useState(clickValue * 100);
+
+    useEffect(() => {
+        setDoubleClickCost(clickValue * 100);
+    }, [clickValue]);
+
+    const maxPickaxeLevel = 5;
+
+    const pickaxeImages = [
+        require('../Assets/Images/Items/WoodenPick.png'),
+        require('../Assets/Images/Items/StonePick.png'),
+        require('../Assets/Images/Items/IronPick.png'),
+        require('../Assets/Images/Items/DiamondPick.png'),
+        require('../Assets/Images/Items/NetheritePick.png'),
+    ];
 
     const upgradePickaxe = async () => {
-        if (emeralds >= doubleClickCost) {
-            // Calculate new values
-            const newEmeralds = emeralds - doubleClickCost;
-            const newClickValue = clickValue * 2;
-            const newAmount = amount - (doubleClickCost * 10); // Subtract corresponding blocks
+        if (pickaxeLevel < maxPickaxeLevel) {
+            if (amount >= doubleClickCost) { // Check if there are enough emeralds
+                const newPickaxeLevel = pickaxeLevel + 1;
+                const newClickValue = clickValue * 2;
+                const newAmount = amount - doubleClickCost; // Update amount by the cost in terms of blocks
 
-            // Update state and database
-            await updateAmount(newAmount);
-            await updateClickValue(newClickValue);
-            setAmount(newAmount);
-            setEmeralds(newEmeralds);
-            setClickValue(newClickValue);
-            setDoubleClickCost(newClickValue * 10);
-            console.log('Upgrading pickaxe');
+                // Update the database with new values
+                await updateAmount(newAmount);
+                await updateClickValue(newClickValue);
+                await updatePickLevel(newPickaxeLevel);
+
+                // Update context state with new values
+                setGameData({
+                    ...gameData,
+                    amount: newAmount,
+                    clickValue: newClickValue,
+                    pickaxeLevel: newPickaxeLevel,
+                });
+
+                // Calculate new emeralds count after deduction
+                setEmeralds(newAmount / 10);
+                console.log('Pickaxe upgraded');
+            } else {
+                console.log('Not enough emeralds');
+            }
         } else {
-            console.log('Not enough emeralds');
+            console.log('Max pickaxe level reached');
+        }
+    };
+
+    const resetGame = async () => {
+        try {
+            await resetGameData();
+            const data = await getGameData();
+            setGameData(data);
+            setEmeralds(Math.floor(data.amount / 10));
+            console.log("Game has been reset:", data);
+
+        } catch (error) {
+            console.error("Error resetting game data:", error);
         }
     };
 
@@ -32,9 +73,10 @@ export default function ShopContent({ amount, emeralds, clickValue, setAmount, s
                 <Image
                     resizeMode='contain'
                     style={styles.ShopImage}
-                    source={require('../Assets/Images/Items/StonePick.png')}
+                    source={pickaxeImages[pickaxeLevel - 1]}
                 />
             </TouchableOpacity>
+            <Button title="Reset Game" onPress={resetGame} />
         </View>
     );
 }

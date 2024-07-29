@@ -3,7 +3,7 @@ import Button from '../Components/Button';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { registerUser } from '../Components/RegisterHandler';
 
-const registerScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
     const [username, setUsername] = React.useState('User');
     const [password, setPassword] = React.useState('1234')
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -53,7 +53,7 @@ const registerScreen = ({ navigation }) => {
     );
 };
 
-export default registerScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
     container: {
