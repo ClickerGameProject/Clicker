@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Image, TouchableOpacity, Button } from 'react-native';
-import { updateAmount, updateClickValue, updatePickLevel, getGameData, resetGameData } from '../Database/Database';
+import { View, Image, TouchableOpacity, Button, Text } from 'react-native';
+import { updateAmount, updateClickValue, updatePickLevel, updateKattendalenAmount } from '../Database/Database';
 import styles from './Style';
 import { GameDataContext } from './GameDataContext';
 
-export default function ShopContent({ setEmeralds }) {
+export default function ShopContent({ item, setEmeralds }) {
     const { gameData, setGameData } = useContext(GameDataContext);
-    const { amount, clickValue, pickaxeLevel } = gameData;
-    const [doubleClickCost, setDoubleClickCost] = useState(clickValue * 100);
+    const { amount, clickValue, pickaxeLevel, kattendalenAmount } = gameData;
+    const [itemCost, setItemCost] = useState(item.initialCost);
 
     useEffect(() => {
-        setDoubleClickCost(clickValue * 100);
-    }, [clickValue]);
+        if (item.type === 'pickaxe') {
+            setItemCost(clickValue * 100);
+        }
+    }, [clickValue, item]);
 
     const maxPickaxeLevel = 5;
 
@@ -25,10 +27,10 @@ export default function ShopContent({ setEmeralds }) {
 
     const upgradePickaxe = async () => {
         if (pickaxeLevel < maxPickaxeLevel) {
-            if (amount >= doubleClickCost) { // Check if there are enough emeralds
+            if (amount >= itemCost) { // Check if there are enough blocks
                 const newPickaxeLevel = pickaxeLevel + 1;
                 const newClickValue = clickValue * 2;
-                const newAmount = amount - doubleClickCost; // Update amount by the cost in terms of blocks
+                const newAmount = amount - itemCost; // Update amount by the cost
 
                 // Update the database with new values
                 await updateAmount(newAmount);
@@ -44,39 +46,92 @@ export default function ShopContent({ setEmeralds }) {
                 });
 
                 // Calculate new emeralds count after deduction
-                setEmeralds(newAmount / 10);
+                setEmeralds(Math.floor(newAmount / 10));
                 console.log('Pickaxe upgraded');
             } else {
-                console.log('Not enough emeralds');
+                console.log('Not enough blocks');
             }
         } else {
             console.log('Max pickaxe level reached');
         }
     };
 
-    const resetGame = async () => {
-        try {
-            await resetGameData();
-            const data = await getGameData();
-            setGameData(data);
-            setEmeralds(Math.floor(data.amount / 10));
-            console.log("Game has been reset:", data);
+    const buyKattendalen = async () => {
+        if (kattendalenAmount < 4) {
+            if (amount >= itemCost) {
+                const newAmount = amount - itemCost;
+                const newKattendalenAmount = kattendalenAmount + 1;
 
-        } catch (error) {
-            console.error("Error resetting game data:", error);
+                await updateAmount(newAmount);
+                await updateKattendalenAmount(newKattendalenAmount);
+
+                setGameData({
+                    ...gameData,
+                    amount: newAmount,
+                    kattendalenAmount: newKattendalenAmount,
+                });
+
+                setEmeralds(Math.floor(newAmount / 10));
+                console.log('KattenDalen bought');
+                console.log('KattendalenAmount:', kattendalenAmount);
+            } else {
+                console.log('Not enough blocks');
+            }
+        } else {
+            console.log('Max Kattendalen reached');
         }
-    };
+    }
+        const buyItem = async () => {
+            if (amount >= itemCost) {
+                const newAmount = amount - itemCost;
 
-    return (
-        <View>
-            <TouchableOpacity onPress={upgradePickaxe} style={styles.gridItem}>
-                <Image
-                    resizeMode='contain'
-                    style={styles.ShopImage}
-                    source={pickaxeImages[pickaxeLevel - 1]}
-                />
-            </TouchableOpacity>
-            <Button title="Reset Game" onPress={resetGame} />
-        </View>
-    );
-}
+                // Update the database with new values
+                await updateAmount(newAmount);
+
+                // Update context state with new values
+                setGameData({
+                    ...gameData,
+                    amount: newAmount,
+                });
+
+                // Calculate new emeralds count after deduction
+                setEmeralds(Math.floor(newAmount / 10));
+                console.log(`${item.name} bought`);
+            } else {
+                console.log('Not enough blocks');
+            }
+        };
+
+        const handlePress = () => {
+            if (item.type === 'pickaxe') {
+                upgradePickaxe();
+            } else if (item.type === 'KattenDalen') {
+                console.log('Buying KattenDalen.....');
+                buyKattendalen();
+            } else {
+                buyItem();
+            }
+        };
+
+        return (
+            <View>
+                <TouchableOpacity onPress={handlePress} style={styles.gridItem}>
+                    {item.type === 'pickaxe' ? (
+                        <Image
+                            resizeMode='contain'
+                            style={styles.ShopImage}
+                            source={pickaxeImages[pickaxeLevel - 1]}
+                        />
+                    ) : item.type === 'KattenDalen' ? (
+                        <Image
+                            resizeMode='contain'
+                            style={styles.ShopImage}
+                            source={require('../Assets/Images/Items/Jellie_Cat.png')}
+                        />
+                    ) : (
+                        <Text style={styles.gridItemText}>{item.name}</Text>
+                    )}
+                </TouchableOpacity>
+            </View>
+        );
+    }

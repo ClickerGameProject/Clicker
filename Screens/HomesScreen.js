@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Text, View, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import Clickable from '../Components/Clickable';
 import { GameDataContext } from '../Components/GameDataContext';
@@ -6,7 +6,7 @@ import styles from '../Components/Style';
 
 export default function HomeScreen({ navigation }) {
     const { gameData } = useContext(GameDataContext);
-    const { amount, clickValue } = gameData;
+    const { amount, clickValue, kattendalenAmount } = gameData;
 
     function TopBar() {
         return (
@@ -28,6 +28,33 @@ export default function HomeScreen({ navigation }) {
         );
     }
 
+    const kattendalenImages = [
+        require('../Assets/Images/Items/Tabby_Cat.png'),
+        require('../Assets/Images/Items/Red_Cat.png'),
+        require('../Assets/Images/Items/Tuxedo_Cat.png'),
+    ];
+
+    // Generate an array of kattendalen images or empty views based on kattendalenAmount
+    const totalSlots = 3; // Number of slots to display horizontally
+    const kattendalenViews = [];
+
+    for (let i = 0; i < totalSlots; i++) {
+        if (i < kattendalenAmount) {
+            const imageIndex = i % kattendalenImages.length; // Loop through images if more slots
+            kattendalenViews.push(
+                <Image
+                    key={i}
+                    style={styles.kattendalenImage}
+                    source={kattendalenImages[imageIndex]}
+                />
+            );
+        } else {
+            kattendalenViews.push(
+                <View key={i} style={styles.emptySlot} />
+            );
+        }
+    }
+
     return (
         <ImageBackground
             source={require('../Assets/Images/Overworld.jpg')}
@@ -36,6 +63,9 @@ export default function HomeScreen({ navigation }) {
             {TopBar()}
             <View style={styles.container}>
                 <Clickable amount={amount} clickValue={clickValue} />
+                <View style={styles.kattendalenContainer}>
+                    {kattendalenViews}
+                </View>
             </View>
         </ImageBackground>
     );

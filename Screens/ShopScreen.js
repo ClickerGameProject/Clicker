@@ -1,13 +1,12 @@
-// ShopScreen.js
-import React, { useContext, useEffect } from 'react';
-import { View, Text, FlatList, ImageBackground, TouchableOpacity, Image } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, FlatList, ImageBackground, TouchableOpacity, Image, Alert } from 'react-native';
 import styles from '../Components/Style';
-import { updateClickValue, updateAmount } from '../Database/Database';
+import { updateClickValue, updateAmount, resetGameData, getGameData } from '../Database/Database';
 import ShopContent from '../Components/ShopContent';
 import { GameDataContext } from '../Components/GameDataContext';
 
 export default function ShopScreen({ route, navigation }) {
-    const { gameData } = useContext(GameDataContext);
+    const { gameData, setGameData } = useContext(GameDataContext);
     const { amount, clickValue } = gameData;
     const [emeralds, setEmeralds] = React.useState(Math.floor(amount / 10));
 
@@ -32,10 +31,22 @@ export default function ShopScreen({ route, navigation }) {
         );
     }
 
+    const resetGame = async () => {
+        try {
+            await resetGameData();
+            const data = await getGameData();
+            setGameData(data);
+            setEmeralds(Math.floor(data.amount / 10));
+            console.log("Game has been reset:", data);
+        } catch (error) {
+            console.error("Error resetting game data:", error);
+        };
+    };
+
     const data = [
-        { id: '1', name: 'Pickaxe', action: 'Upgrade' },
-        { id: '2', name: 'Item 2' },
-        { id: '3', name: 'Item 3' },
+        { id: '1', name: 'Upgrade Pickaxe', type: 'pickaxe', initialCost: 100 },
+        { id: '2', name: 'Kattendalen', type: 'KattenDalen', initialCost: 50 },
+        { id: '3', name: 'Item 3', type: 'item', initialCost: 30 },
         { id: '4', name: 'Item 4' },
         { id: '5', name: 'Item 5' },
         { id: '6', name: 'Item 6' },
@@ -47,20 +58,12 @@ export default function ShopScreen({ route, navigation }) {
         { id: '12', name: 'Item 12' },
     ];
 
-    const renderItem = ({ item }) => {
-        return item.id === '1' ? (
-            <ShopContent
-                amount={amount}
-                emeralds={emeralds}
-                clickValue={clickValue}
-                setEmeralds={setEmeralds}
-            />
-        ) : (
-            <View style={styles.gridItem}>
-                <Text style={styles.gridItemText}>{item.name}</Text>
-            </View>
-        );
-    };
+    const renderItem = ({ item }) => (
+        <ShopContent
+            item={item}
+            setEmeralds={setEmeralds}
+        />
+    );
 
     return (
         <ImageBackground
@@ -79,6 +82,12 @@ export default function ShopScreen({ route, navigation }) {
                         contentContainerStyle={styles.gridContentContainer}
                     />
                 </View>
+                <TouchableOpacity
+                    style={styles.resetButton}
+                    onPress={resetGame}
+                >
+                    <Text style={styles.resetButtonText}>Reset Game Data</Text>
+                </TouchableOpacity>
             </View>
         </ImageBackground>
     );

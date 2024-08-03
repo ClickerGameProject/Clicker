@@ -19,7 +19,8 @@ export const createTable = async () => {
             id INTEGER PRIMARY KEY NOT NULL, 
             amount INTEGER DEFAULT 0, 
             clickValue INTEGER DEFAULT 1,
-            pickaxeLevel INTEGER DEFAULT 1
+            pickaxeLevel INTEGER DEFAULT 1,
+            kattendalenAmount INTEGER DEFAULT 0
     );
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY NOT NULL,
@@ -33,7 +34,7 @@ export const insertInitialData = async () => {
     const db = await openDatabaseAsync();
     const result = await db.getFirstAsync('SELECT COUNT(*) AS count FROM game_data');
     if (result.count === 0) {
-        await db.runAsync('INSERT INTO game_data (id, amount, clickValue, pickaxeLevel) VALUES (1, 0, 1, 1)');
+        await db.runAsync('INSERT INTO game_data (id, amount, clickValue, pickaxeLevel, kattendalenAmount) VALUES (1, 0, 1, 1, 0');
     }
 };
 
@@ -54,15 +55,20 @@ export const updatePickLevel = async (pickaxeLevel) => {
     await db.runAsync('UPDATE game_data SET pickaxeLevel = ? WHERE id = 1', [pickaxeLevel]);
 };
 
-// Get the game data (amount and click value) from the database
+export const updateKattendalenAmount = async (kattendalenAmount) => {
+    const db = await openDatabaseAsync();
+    await db.runAsync('UPDATE game_data SET kattendalenAmount = ? WHERE id = 1', [kattendalenAmount]);
+}
+
 export const getGameData = async () => {
     const db = await openDatabaseAsync();
-    const result = await db.getFirstAsync('SELECT amount, clickValue, pickaxeLevel FROM game_data WHERE id = 1');
-    return result ? result : { amount: 0, clickValue: 1, pickaxeLevel: 1 };
+    const result = await db.getFirstAsync('SELECT amount, clickValue, pickaxeLevel, kattendalenAmount FROM game_data WHERE id = 1');
+    return result ? result : { amount: 0, clickValue: 1, pickaxeLevel: 1, kattendalenAmount: 0 };
 };
+
 
 // Reset game data
 export const resetGameData = async () => {
     const db = await openDatabaseAsync();
-    await db.runAsync('UPDATE game_data SET amount = 0, clickValue = 1, pickaxeLevel = 1 WHERE id = 1');
+    await db.runAsync('UPDATE game_data SET amount = 0, clickValue = 1, pickaxeLevel = 1, kattendalenAmount = 0 WHERE id = 1');
 };
