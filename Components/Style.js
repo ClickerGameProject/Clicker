@@ -120,7 +120,24 @@ const styles = StyleSheet.create({
     gridItemText: {
         color: 'black',
     },
-
+    //Kattendale image
+    kattendalenContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+    },
+    kattendalenImage: {
+        width: 100, 
+        height: 100, 
+        resizeMode: 'contain', 
+    },
+    emptySlot: {
+        width: 100,
+        height: 100,
+        marginHorizontal: 5,
+        backgroundColor: 'transparent',
+    },
+    
     //Shop styling and it's children
     amountText: {
         fontSize: 20,

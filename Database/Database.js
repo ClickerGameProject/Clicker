@@ -58,7 +58,7 @@ export const insertInitialData = async (username) => {
         } else {
             const userId = await getId(username);
             if (userId) {
-                await db.runAsync('INSERT INTO game_data (user_id, amount, clickValue, pickaxeLevel) VALUES (?, 0, 1, 1)', [userId]);
+                await db.runAsync('INSERT INTO game_data (user_id, amount, clickValue, pickaxeLevel, kattendalenAmount) VALUES (?, 0, 1, 1)', [userId]);
                 //console.log('Data inserted into: ', username);
             }
         }
@@ -119,6 +119,12 @@ export const updatePickLevel = async (username, pickaxeLevel) => {
     await db.runAsync('UPDATE game_data SET pickaxeLevel = ? WHERE user_id = ?', [pickaxeLevel, userId]);
 };
 
+export const updateKattendalenAmount = async (username, kattendalenAmount) => {
+    const userId = await getId(username);
+    const db = await openDatabaseAsync();
+    await db.runAsync('UPDATE game_data SET kattendalenAmount = ? WHERE id = ?', [kattendalenAmount, userId]);
+}
+
 // Fetch game data linked to given userId
 export const getGameData = async (username) => {
     try {
@@ -131,15 +137,14 @@ export const getGameData = async (username) => {
         console.log('Id found:', userId);
         const db = await openDatabaseAsync();
         // console.log('Database opened successfully from getGameData');
-        const result = await db.getFirstAsync('SELECT amount, clickValue, pickaxeLevel FROM game_data WHERE user_id = ?', [userId]);
+        const result = await db.getFirstAsync('SELECT amount, clickValue, pickaxeLevel, kattendalenAmount FROM game_data WHERE user_id = ?', [userId]);
         console.log('GameData gotten:', result)
-        return result ? result : { amount: 0, clickValue: 1, pickaxeLevel: 1 };
+        return result ? result : { amount: 0, clickValue: 1, pickaxeLevel: 1, kattendalenAmount: 0 };
     } catch (error) {
         console.error('Error getting game data:', error);
         return { amount: 0, clickValue: 1, pickaxeLevel: 1 };
     }
 };
-
 
 // Reset game data
 export const resetGameData = async (username) => {
@@ -149,7 +154,7 @@ export const resetGameData = async (username) => {
         return;
     }
     const db = await openDatabaseAsync();
-    await db.runAsync('UPDATE game_data SET amount = 0, clickValue = 1, pickaxeLevel = 1 WHERE user_id = ?', [userId]);
+    await db.runAsync('UPDATE game_data SET amount = 0, clickValue = 1, pickaxeLevel = 1, kattendalenAMount = 0 WHERE user_id = ?', [userId]);
 };
 
 // Clear the database completely

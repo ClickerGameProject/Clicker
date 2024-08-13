@@ -9,6 +9,7 @@ export const GameDataProvider = ({ children }) => {
         amount: 0,
         clickValue: 1,
         pickaxeLevel: 1,
+        kattendalenAmount: 0,
         // Add other game data here
     });
 
