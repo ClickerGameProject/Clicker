@@ -1,12 +1,17 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useCallback, useState, useRef } from 'react';
 import { Text, View, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import Clickable from '../Components/Clickable';
 import { GameDataContext } from '../Components/GameDataContext';
 import styles from '../Components/Style';
+import { saveGameData } from '../Components/GameDataContext';
+import { useFocusEffect } from '@react-navigation/native';
+import { useUsername } from '../Components/UsernameContext';
+
 
 export default function HomeScreen({ navigation }) {
     const { gameData } = useContext(GameDataContext);
-    const { amount, clickValue } = gameData;
+    const { username } = useUsername();
+    const { amount, clickValue, pickaxeLevel } = gameData;
 
     function TopBar() {
         return (
@@ -27,6 +32,18 @@ export default function HomeScreen({ navigation }) {
             </View>
         );
     }
+
+    useFocusEffect(
+        useCallback(() => {
+            return () => {
+                const saveData = async () => {
+                    //console.log(gameData);
+                    await saveGameData(username, gameData);
+                };
+                saveData();
+            };
+        },[gameData])
+    );
 
     return (
         <ImageBackground

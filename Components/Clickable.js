@@ -18,6 +18,7 @@ export default function Clickable() {
             ...gameData,
             amount: newAmount
         });
+        console.log(gameData)
     };
 
     // Define block images (could use logic to choose based on pickaxe level)

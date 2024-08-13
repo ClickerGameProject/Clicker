@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Button from '../Components/Button';
 import { loginUser } from '../Components/LoginHandler';
-import { createTable, insertInitialData, getGameData } from '../Database/Database';
+import { createTable, insertInitialData, getGameData, insertGameData, clearDatabase, updateAmount, updateClickValue, updatePickLevel, updateGameData } from '../Database/Database';
+import { registerUser } from '../Components/RegisterHandler';
+import { useUsername } from '../Components/UsernameContext';
+import { GameDataContext } from '../Components/GameDataContext';
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = React.useState('User');
+
+  const { gameData, setGameData } = useContext(GameDataContext);
+  const { username, setUsername } = useUsername();
   const [password, setPassword] = React.useState('1234')
 
   //Setup database and such upon first render.
   useEffect(() => {
     const setupDatabase = async () => {
+      //console.log('Setting up database...');
         await createTable();
-        await insertInitialData();
-        const gameData = await getGameData();
+        await registerUser('Admin', '1234');
+        await insertInitialData(username);
+        //console.log('Database initialization complete!')
     };
     setupDatabase();
 }, []);
@@ -36,10 +43,15 @@ export default function Login({ navigation }) {
     const loginSuccessful = await loginUser(username, password);
 
     if (loginSuccessful) {
-      alert('Login successful!');
+
+      const data = await getGameData(username);
+      console.log('Gamedata found from ', username)
+      console.log(data);
+      setGameData(data);
       await navigation.navigate('Home');
       enableButtons();
       setIsEditable(true);
+      alert('Login successful!');
     } else {
       alert('Incorrect username or password.');
       enableButtons();
