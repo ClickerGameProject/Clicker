@@ -16,11 +16,11 @@ export default function Login({ navigation }) {
   //Setup database and such upon first render.
   useEffect(() => {
     const setupDatabase = async () => {
-      //console.log('Setting up database...');
+      console.log('Setting up database...');
         await createTable();
         await registerUser('Admin', '1234');
         await insertInitialData(username);
-        //console.log('Database initialization complete!')
+        console.log('Database initialization complete!')
     };
     setupDatabase();
 }, []);
