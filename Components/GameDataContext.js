@@ -1,5 +1,6 @@
 // GameDataContext.js
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import { updateGameData } from '../Database/Database';
 
 export const GameDataContext = createContext();
 
@@ -13,8 +14,14 @@ export const GameDataProvider = ({ children }) => {
     });
 
     return (
-        <GameDataContext.Provider value={{ gameData, setGameData }}>
+        <GameDataContext.Provider value={{ gameData, setGameData}}>
             {children}
         </GameDataContext.Provider>
     );
+};
+
+export const saveGameData = async (username, gameData) => {
+    //console.log('Saving gameData')
+    await updateGameData(username, gameData);
+    console.log('GameData saved!')
 };

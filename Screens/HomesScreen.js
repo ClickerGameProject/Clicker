@@ -1,11 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useCallback, useState, useRef } from 'react';
 import { Text, View, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import Clickable from '../Components/Clickable';
 import { GameDataContext } from '../Components/GameDataContext';
 import styles from '../Components/Style';
+import { saveGameData } from '../Components/GameDataContext';
+import { useFocusEffect } from '@react-navigation/native';
+import { useUsername } from '../Components/UsernameContext';
+
 
 export default function HomeScreen({ navigation }) {
     const { gameData } = useContext(GameDataContext);
+    const { username } = useUsername();
     const { amount, clickValue, kattendalenAmount } = gameData;
 
     function TopBar() {
@@ -27,6 +32,7 @@ export default function HomeScreen({ navigation }) {
             </View>
         );
     }
+
 
     const kattendalenImages = [
         require('../Assets/Images/Items/Tabby_Cat.png'),
@@ -54,6 +60,18 @@ export default function HomeScreen({ navigation }) {
             );
         }
     }
+    
+        useFocusEffect(
+        useCallback(() => {
+            return () => {
+                const saveData = async () => {
+                    //console.log(gameData);
+                    await saveGameData(username, gameData);
+                };
+                saveData();
+            };
+        },[gameData])
+    );
 
     return (
         <ImageBackground

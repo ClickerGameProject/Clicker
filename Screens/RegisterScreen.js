@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Button from '../Components/Button';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { registerUser } from '../Components/RegisterHandler';
+import { useUsername } from '../Components/UsernameContext';
 
 const RegisterScreen = ({ navigation }) => {
-    const [username, setUsername] = React.useState('User');
+  const { username, setUsername } = useUsername();
     const [password, setPassword] = React.useState('1234')
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [isEditable, setIsEditable] = useState(true);

@@ -2,10 +2,9 @@ import * as SQLite from 'expo-sqlite';
 import bcrypt from 'react-native-bcrypt'
 
 export const loginUser = async (username, password) => {
-    console.log('Login button pressed!')
+    //console.log('Login button pressed!')
 
     const db = await SQLite.openDatabaseAsync('Database.db');
-    console.log('Database opened succesfully');
 
     // Check for username
     const result = await db.getFirstAsync('SELECT username FROM users WHERE username = ?', [username]);
@@ -27,7 +26,7 @@ export const loginUser = async (username, password) => {
             const isPasswordValid = bcrypt.compareSync(password, storedHashedPassword);
             if (isPasswordValid) {
                 // Login successful
-                console.log('Login succesfull'); // Show a success message or navigate to the next screen
+                //console.log('Attempting login...');
                 return true;
             } else if (!isPasswordValid)
                 {

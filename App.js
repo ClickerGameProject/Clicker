@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './Components/StackNavigator';
 import { Random } from 'expo-random';
-import { setupDatabase } from './Database/Database';
 import bcrypt from 'react-native-bcrypt'
 import { GameDataProvider } from './Components/GameDataContext'; // Ensure correct path
+import { UsernameProvider } from './Components/UsernameContext';
 
 bcrypt.setRandomFallback(async (byteCount) => {
   const randomBytes = await Random.getRandomBytesAsync(byteCount);
@@ -19,10 +18,13 @@ export default function App() {
 
     <NavigationContainer>
       <GameDataProvider>
+      <UsernameProvider>
         <SafeAreaView style={styles.container}>
           <StackNavigator />
         </SafeAreaView>
+        </UsernameProvider>
       </GameDataProvider>
+      
     </NavigationContainer>
   );
 }

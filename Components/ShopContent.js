@@ -33,9 +33,11 @@ export default function ShopContent({ item, setEmeralds }) {
                 const newAmount = amount - itemCost; // Update amount by the cost
 
                 // Update the database with new values
+                /*
                 await updateAmount(newAmount);
                 await updateClickValue(newClickValue);
                 await updatePickLevel(newPickaxeLevel);
+                */
 
                 // Update context state with new values
                 setGameData({
