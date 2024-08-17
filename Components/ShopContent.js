@@ -3,11 +3,14 @@ import { View, Image, TouchableOpacity, Button, Text } from 'react-native';
 import { updateAmount, updateClickValue, updatePickLevel, updateKattendalenAmount } from '../Database/Database';
 import styles from './Style';
 import { GameDataContext } from './GameDataContext';
+import { useUsername } from '../Components/UsernameContext';
+import { saveGameData } from './GameDataContext';
 
 export default function ShopContent({ item, setEmeralds }) {
     const { gameData, setGameData } = useContext(GameDataContext);
     const { amount, clickValue, pickaxeLevel, kattendalenAmount } = gameData;
     const [itemCost, setItemCost] = useState(item.initialCost);
+    const { username, setUsername } = useUsername();
 
     useEffect(() => {
         if (item.type === 'pickaxe') {
@@ -32,13 +35,6 @@ export default function ShopContent({ item, setEmeralds }) {
                 const newClickValue = clickValue * 2;
                 const newAmount = amount - itemCost; // Update amount by the cost
 
-                // Update the database with new values
-                /*
-                await updateAmount(newAmount);
-                await updateClickValue(newClickValue);
-                await updatePickLevel(newPickaxeLevel);
-                */
-
                 // Update context state with new values
                 setGameData({
                     ...gameData,
@@ -46,6 +42,9 @@ export default function ShopContent({ item, setEmeralds }) {
                     clickValue: newClickValue,
                     pickaxeLevel: newPickaxeLevel,
                 });
+
+                // Update the database with new values
+                saveGameData(username, gameData);
 
                 // Calculate new emeralds count after deduction
                 setEmeralds(Math.floor(newAmount / 10));
@@ -64,14 +63,14 @@ export default function ShopContent({ item, setEmeralds }) {
                 const newAmount = amount - itemCost;
                 const newKattendalenAmount = kattendalenAmount + 1;
 
-                await updateAmount(newAmount);
-                await updateKattendalenAmount(newKattendalenAmount);
-
                 setGameData({
                     ...gameData,
                     amount: newAmount,
                     kattendalenAmount: newKattendalenAmount,
                 });
+
+                // Update the database with new values
+                saveGameData(username, gameData);
 
                 setEmeralds(Math.floor(newAmount / 10));
                 console.log('KattenDalen bought');
@@ -87,14 +86,14 @@ export default function ShopContent({ item, setEmeralds }) {
             if (amount >= itemCost) {
                 const newAmount = amount - itemCost;
 
-                // Update the database with new values
-                await updateAmount(newAmount);
-
                 // Update context state with new values
                 setGameData({
                     ...gameData,
                     amount: newAmount,
                 });
+
+                // Update the database with new values
+                saveGameData(username, gameData);
 
                 // Calculate new emeralds count after deduction
                 setEmeralds(Math.floor(newAmount / 10));

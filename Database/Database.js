@@ -27,6 +27,7 @@ export const createTable = async () => {
                 amount INTEGER DEFAULT 0, 
                 clickValue INTEGER DEFAULT 1,
                 pickaxeLevel INTEGER DEFAULT 1,
+                kattendalenAmount INTEGER DEFAULT 0,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
         `);
@@ -69,13 +70,13 @@ export const insertInitialData = async (username) => {
 
 // Update all gameData for the given user
 export const updateGameData = async ( username, gameData ) => {
-    const { amount, clickValue, pickaxeLevel } = gameData;
-    //console.log('data given: ', amount, clickValue, pickaxeLevel)
+    const { amount, clickValue, pickaxeLevel, kattendalenAmount } = gameData;
     //console.log('Updating gameData...');
     try {
         await updateAmount(username, amount);
         await updateClickValue(username, clickValue);
         await updatePickLevel(username, pickaxeLevel);
+        await updateKattendalenAmount(username, kattendalenAmount);
         //console.log('Game data updated!');
     } catch (error) {
         console.error('Error updating game data:', error);
@@ -121,8 +122,12 @@ export const updatePickLevel = async (username, pickaxeLevel) => {
 
 export const updateKattendalenAmount = async (username, kattendalenAmount) => {
     const userId = await getId(username);
+    if (!userId) {
+        console.error('Error updating kattendalenAmount: user not found.');
+        return;
+    }
     const db = await openDatabaseAsync();
-    await db.runAsync('UPDATE game_data SET kattendalenAmount = ? WHERE id = ?', [kattendalenAmount, userId]);
+    await db.runAsync('UPDATE game_data SET kattendalenAmount = ? WHERE user_id = ?', [kattendalenAmount, userId]);
 }
 
 // Fetch game data linked to given userId
